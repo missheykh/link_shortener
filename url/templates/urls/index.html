@@ -7,11 +7,11 @@
     <title>Document</title>
 </head>
 <body>
+<h3>Welcome To Link Shortener!</h3>
    <form action="{% url 'url:create_short_url' %}" method="post">
 {% csrf_token %}
 {{form}}
-<input type="submit" value="create Short url">
-{{a_tag|safe}}
+<input type="submit" value="create">
 </form>
 </body>
 </html>
