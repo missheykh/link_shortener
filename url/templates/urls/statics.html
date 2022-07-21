@@ -1,3 +1,4 @@
+{% extends "urls/index.html" %}
 <!DOCTYPE html>
 <html lang="en">
 {% block header %}
@@ -7,14 +8,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
    
-    <style>ul {  list-style-type: none;} li{display: inline-block;padding:20px;} a{text-decoration: none; color: blueviolet;}</style>
+    <style>ul {  list-style-type: none;} li{display: inline-block;padding:20px;} a{text-decoration: none; color: blueviolet;}
+    table, th, td {
+  border: 1px solid black;
+}
+    </style>
      <ul>
             <li> <a href="{% url 'url:create_short_url'%}">home</a></li>
             {% if user.is_authenticated %}
                 {% comment %} <li>Hi {{user.username}}</li> {% endcomment %}
-                            <li> <a href="{% url 'url:user_statics' user.id %}">statics</a> </li>
-
-                <li>Hi {{user.username}} ! Welcome!</li>
+                <li> <a href="{% url 'url:user_statics' user.id%}">statics</a> </li>
+                <li>Hi {{user.username}}! Welcome!</li>
                 <li><a href="{% url 'url:logout' %}">logout</a></li>
             {% else %}
                 <li><a href="{% url 'url:login' %}">login</a></li>
@@ -23,15 +27,22 @@
     </ul>
 </head>
 {% endblock header %}
-{% block body  %}
+{% block body %}
+
 <body>
-    <h4>Welcome To Link Shortener!</h4>
-   <form action="{% url 'url:create_short_url' %}" method="post">
-{% csrf_token %}
-{{form.as_p}}
-<input type="submit" value="create">
-</form>
-<p>{{msg}}</p>
+<table>
+    <tr><td>username</td><td>long_url > short_url</td><td>create_time</td><td>response_time(second)</td></tr>
+    {% for elm in info_list %}
+    <tr>
+        <td>{{elm.user}}</td>
+        <td>{{elm.url}}</td>
+        <td>{{elm.created_at}}</td>
+        <td>{{elm.response_time}}</td>
+    </tr>
+    {% endfor %}
+</table>
+    {{msg}}
 </body>
 {% endblock body %}
+
 </html>

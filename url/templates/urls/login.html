@@ -7,7 +7,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-   
+    {% if not user.is_authenticated %}
+    <h2>To use this site please login first</h2>
+    {% endif %}
+
     <style>ul {  list-style-type: none;} li{display: inline-block;padding:20px;} a{text-decoration: none; color: blueviolet;}</style>
      <ul>
             <li> <a href="{% url 'url:create_short_url'%}">home</a></li>
