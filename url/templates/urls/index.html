@@ -1,17 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
+{% block header %}
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+   
+    <style>ul {  list-style-type: none;} li{display: inline-block;padding:20px;} a{text-decoration: none; color: blueviolet;}</style>
+     <ul>
+            <li> <a href="{% url 'url:create_short_url'%}">home</a></li>
+            {% if user.is_authenticated %}
+                {% comment %} <li>Hi {{user.username}}</li> {% endcomment %}
+                            <li> <a href="{% url 'url:user_static'%}">statics</a> </li>
+
+                <li>Hi {{user.username}} ! Welcome!</li>
+                <li><a href="{% url 'url:logout' %}">logout</a></li>
+            {% else %}
+                <li><a href="{% url 'url:login' %}">login</a></li>
+                <li><a href="{% url 'url:register' %}">register</a></li>
+            {% endif %}
+    </ul>
 </head>
+{% endblock header %}
+{% block body  %}
 <body>
-<h3>Welcome To Link Shortener!</h3>
+    <h4>Welcome To Link Shortener!</h4>
    <form action="{% url 'url:create_short_url' %}" method="post">
 {% csrf_token %}
-{{form}}
+{{form.as_p}}
 <input type="submit" value="create">
 </form>
+<p>{{msg}}</p>
 </body>
+{% endblock body %}
 </html>

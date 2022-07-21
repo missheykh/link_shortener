@@ -14,7 +14,7 @@
             {% if user.is_authenticated %}
                 {% comment %} <li>Hi {{user.username}}</li> {% endcomment %}
                 <li> <a href="{% url 'url:user_static'%}">statics</a> </li>
-                <li>Hi {{user.username}}! Welcome!</li>
+                <li>Hi {{user.username}}! Welcome !</li>
                 <li><a href="{% url 'url:logout' %}">logout</a></li>
             {% else %}
                 <li><a href="{% url 'url:login' %}">login</a></li>
@@ -26,10 +26,10 @@
 {% block body %}
 
 <body>
-    <form action="{%url 'url:register' %}" , method="post">
+    <form action="{%url 'url:login' %}" , method="post">
         {% csrf_token %}
         {{form.as_p}}
-        <input type="submit" value="register">
+        <input type="submit" value="login">
     </form>
     {{msg}}
 </body>

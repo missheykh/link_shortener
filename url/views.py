@@ -1,18 +1,20 @@
 from distutils.log import error
 from telnetlib import STATUS
+from xml.dom import NotFoundErr
 from django.forms import ValidationError
 from django.urls import reverse
 from django.conf import settings
 from django.shortcuts import redirect, render,get_object_or_404
+from urllib3 import HTTPResponse
 from .models import Url
 import string,random
-from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect, JsonResponse
-from .forms  import UrlForm
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotFound, HttpResponseRedirect, JsonResponse
+from .forms  import UrlForm,RegisterForm,LoginForm
 import sys
 import datetime
 from django.core.validators import URLValidator
-URLValidator()
-
+from .models import User
+from django.contrib.auth import login as _login, authenticate, logout as _logout
 
 def update_click_count(request,pk):    
     obj=get_object_or_404(Url,short_url=pk)
@@ -71,7 +73,7 @@ def create_short_url(request):
                 # return JsonResponse({"long_url":long_url,"short_url":domain+slug})
                 # return redirect(reverse("url:a",kwargs={"secret_key":slug}))
                 return HttpResponse(domain+slug)
-        return HttpResponse(form.error)   
+        return HttpResponse(form.errors)   
     else:
         form = UrlForm()
     # data = UrlData.objects.all()
@@ -79,6 +81,57 @@ def create_short_url(request):
     return render(request, 'urls/index.html', context)
 
 
+
 def register(request):
+    context={}
+    if request.method=='POST':
+            form=RegisterForm(request.POST)
+            if form.is_valid():
+                _username=form.cleaned_data.get('username','')
+                if User.objects.filter(username=_username).exists():
+                    return render(request,'urls/register.html',{"error":"username already exist"})
+                else:
+                    form.save()
+                    get_object_or_404
+                    return render(request,'urls/register.html',{"form":form,"msg":"user created sucessfully"})
+            else:
+                return HttpResponse(form.errors)
+    else:
+        form=RegisterForm()
+        context['form']=form
+        return render(request,'urls/register.html',context)
+    
+
+def login(request):
+    context={}
+    if request.method=='POST':
+        form=LoginForm(request.POST)
+        if form.is_valid():
+            _username = request.POST.get("username", "")
+            _password = request.POST.get("password", "")
+            user = authenticate(request, username=_username, password=_password)
+            print(f"&&&&&&&&&&&&&&&&{user}")
+            if user is not None:
+                _login(request, user)
+                # return redirect('url:create_short_url')
+                return render(request,'urls/login.html',{"form":form,"msg":"you loged in successfuly"})        
+
+        else:
+            print(f"########{form.errors}")
+            return HttpResponse(form.errors)
+    else:
+        form=LoginForm()
+        context['form']=form
+        return render(request,'urls/login.html',context)        
+
+
+def logout(request):
+    form = UrlForm()
+    context={"form":form,"msg":"you loged out"}
+    _logout(request)
+    # return redirect('create_short_url')
+    return render(request,'urls/index.html',context)
+
+def user_static():
     pass
 
