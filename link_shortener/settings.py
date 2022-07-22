@@ -21,6 +21,9 @@ load_dotenv(verbose=True, dotenv_path=env_file)
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
@@ -43,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'url',
+    'django_extensions',
     
 ]
 

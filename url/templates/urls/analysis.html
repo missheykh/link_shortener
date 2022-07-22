@@ -24,9 +24,6 @@
                 <li><a href="{% url 'url:login' %}">login</a></li>
                 <li><a href="{% url 'url:register' %}">register</a></li>
             {% endif %}
-            {% if user.is_superuser %}
-                <li><a href="{% url 'url:analysis' %}">analysis</a></li>
-            {% endif %}
     </ul>
 </head>
 {% endblock header %}
@@ -34,16 +31,26 @@
 
 <body>
 <table>
-    <tr><td>username</td><td>long_url > short_url</td><td>create_time</td><td>response_time(second)</td></tr>
-    {% for elm in info_list %}
+    <tr><td>long_url</td><td>short_url</td><td>click_count number by users</td><td>Users</td></tr>
+    {% for elm in analysis_list %}
     <tr>
-        <td>{{elm.user}}</td>
-        <td>{{elm.url}}</td>
-        <td>{{elm.created_at}}</td>
-        <td>{{elm.response_time}}</td>
+        <td>{{elm.long_url}}</td>
+        <td>{{elm.short_url}}</td>
+        <td>{{elm.click_count}}</td>
+        <td><table>
+        <tr><td>user</td><td>response_time</td><td>created_time</td></tr>
+        {% for item in elm.linkinfo.all %}
+        <tr>
+               <td> {{item.user.username}}</td>
+               <td> {{item.response_time}}</td>
+                <td>{{item.created_at}}</td>
+        </tr>
+        {% endfor %} 
+        </table></td>
     </tr>
-    {% endfor %}
+    {% endfor %} 
 </table>
+
     {{msg}}
 </body>
 {% endblock body %}

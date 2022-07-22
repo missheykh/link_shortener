@@ -134,11 +134,27 @@ def logout(request):
     return render(request,'urls/index.html',context)
 
 
+def user_info(request,pk):# return a queryset for using in other funcs
+    info_list=Info.objects.filter(user=pk)
+    return info_list
+
+
 def user_statics(request,pk):# each user can see it
     context={}
-    info_list=Info.objects.filter(user=pk)
+    # info_list=Info.objects.filter(user=pk)
+    info_list=user_info(request,pk)
     context['info_list']=info_list
     return render(request,'urls/statics.html',context)
 
+
 def analysis(request):# Only superusers can see it
-    pass
+    if request.user.is_superuser:
+        context={}
+        analysis_list=Url.objects.all()
+        for item in analysis_list:
+            print(item.linkinfo.all())
+        # print(Url.objects.select_related('urls').all())
+        context['analysis_list']=analysis_list
+        return render(request,'urls/analysis.html',context)
+    else:
+        return HttpResponse('you havn\'t permission')

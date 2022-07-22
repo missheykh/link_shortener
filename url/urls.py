@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import create_short_url,redirect_target_url,register,user_statics,login,logout
+from .views import create_short_url,redirect_target_url,register,user_statics,login,logout,analysis
 
 
 app_name='url'
@@ -13,6 +13,7 @@ urlpatterns = [
     path('login/',login,name='login'),
     path('logout/',logout,name='logout'),
     path('user_statics/<int:pk>/',user_statics,name='user_statics'),
+    path('analysis/',analysis,name='analysis'),
    
 ]
 

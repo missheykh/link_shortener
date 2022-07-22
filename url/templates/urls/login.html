@@ -23,6 +23,9 @@
                 <li><a href="{% url 'url:login' %}">login</a></li>
                 <li><a href="{% url 'url:register' %}">register</a></li>
             {% endif %}
+            {% if user.is_superuser %}
+                <li><a href="{% url 'url:analysis' %}">analysis</a></li>
+            {% endif %}
     </ul>
 </head>
 {% endblock header %}
