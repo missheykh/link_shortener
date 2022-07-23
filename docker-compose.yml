@@ -1,0 +1,47 @@
+version: "3.7"
+
+services:
+  django_web:
+    build: .
+    command: >
+      ash -c "python manage.py migrate && gunicorn link_shortener.wsgi:application --bind 0.0.0.0:8000"
+    volumes:
+      - static:/app/static
+      - media:/app/media
+      - .:/app/
+    env_file:
+      - ./.env
+    depends_on:
+      - postgres_db
+    networks:
+      - front-net
+      - back-net
+  postgres_db:
+    image: postgres:12.0-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DB=url_shortener1
+    networks:
+      - back-net
+  nginx:
+    build: ./nginx
+    volumes:
+      - static:/app/static
+      - media:/app/media
+    ports:
+      - 8008:80
+    depends_on:
+      - django_web
+    networks:
+      - front-net
+volumes:
+  postgres_data:
+  static:
+  media:
+  redis_val:
+networks:
+  front-net:
+  back-net:
